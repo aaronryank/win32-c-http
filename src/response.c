@@ -36,12 +36,11 @@ RESPONSE *GetResponse(REQUEST *request)
     return response;
 }
 
-void SendResponse(SOCKET sock, RESPONSE *response)
+int SendResponse(SOCKET sock, RESPONSE *response)
 {
     if (response->error) {
-        //send(sock, response->header, strlen(response->header), 0);
         send(sock, DEFAULT_ERROR_404, strlen(DEFAULT_ERROR_404), 0);
-        return;
+        return 1;
     }
 
     FILE *f = fopen(response->filepath, "rb");
@@ -50,11 +49,10 @@ void SendResponse(SOCKET sock, RESPONSE *response)
 
     if (!f) {
         send(sock, "HTTP/1.1 500 Internal Server Error\r\nContent-Length: 0\r\n\r\n", 57, 0);
-        return;
+        return 1;
     }
 
     send(sock, response->header, strlen(response->header), 0);
-    printf("Served file %s\n", response->filepath);
 
     int result = 0;
     while ((result = fread(buf, 1, 1024, f)) > 0)
@@ -62,14 +60,21 @@ void SendResponse(SOCKET sock, RESPONSE *response)
         msg_len = send(sock, buf, result, 0);
 
         if (msg_len == SOCKET_ERROR) {
-            error_live("send()");
-            return;
+            //error_live("send()");
+            printf("Error sending data, reconnecting...\n");
+            closesocket(sock);
+            return -1;
         }
         else if (!msg_len)
         {
             printf("Client closed connection\n");
-            //closesocket(sock);
+            closesocket(sock);
+            return 0;
             //WSACleanup();
         }
     }
+
+    printf("Served file %s\n", response->filepath);
+
+    return 1;
 }

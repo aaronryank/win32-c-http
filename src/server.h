@@ -24,6 +24,6 @@ extern char *getcwd(char *, unsigned int);
 extern char *get_header(RESPONSE *);
 extern REQUEST *GetRequest(SOCKET);
 extern RESPONSE *GetResponse(REQUEST *);
-extern void SendResponse(SOCKET, RESPONSE *);
+extern int SendResponse(SOCKET, RESPONSE *);
 extern void error_live(const char *);
 extern void error_die(const char *);

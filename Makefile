@@ -1,4 +1,4 @@
-OBJ := defaults.o error.o header.o request.o response.o server.o
+OBJ := src/defaults.o src/error.o src/header.o src/request.o src/response.o src/server.o
 CC := gcc
 CFLAGS := -lws2_32 -g
 

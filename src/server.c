@@ -28,6 +28,8 @@ int main(int argc, char **argv)
     if (bind(sock, (struct sockaddr *)&local, sizeof(local)) == SOCKET_ERROR)
         error_die("bind()");
 
+listen_goto:
+
     if (listen(sock, 5) == SOCKET_ERROR)
         error_die("listen()");
 
@@ -53,9 +55,15 @@ int main(int argc, char **argv)
             continue;
 
         RESPONSE *response = GetResponse(request);
-        SendResponse(msg_sock, response);
+        int sent = SendResponse(msg_sock, response);
 
         closesocket(msg_sock);
+
+        if (sent == 0)
+            break;
+        else if (sent == -1)
+            goto listen_goto;
+
     }
 
     WSACleanup();
