@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 
 listen_goto:
 
-    if (listen(sock, 5) == SOCKET_ERROR)
+    if (listen(sock, 10) == SOCKET_ERROR)
         error_die("listen()");
 
     printf("Waiting for connection...\n");
