@@ -20,7 +20,6 @@ enum { RQ_UNDEF,GET,POST,PUT } response_types;
 
 extern const char *DEFAULT_ERROR_404;
 
-extern char *getcwd(char *, unsigned int);
 extern char *get_header(RESPONSE *);
 extern REQUEST *GetRequest(SOCKET);
 extern RESPONSE *GetResponse(REQUEST *);
