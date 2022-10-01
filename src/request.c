@@ -25,7 +25,7 @@ char *get_request_value(char *buf)
 
     if (retval[strlen(retval)-1] == '/')
         strcat(retval, "index.html");
-
+    strtok(retval, "?");
     return strdup(retval);
 }
 
